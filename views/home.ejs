@@ -1,0 +1,152 @@
+<%- include('bootstrap') %>
+<!-- Image and text -->
+<style>
+    .btn,
+    input {
+        box-shadow: none !important;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <a class="navbar-brand" href="#">Quize portal</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <ul class="navbar-nav mr-auto">
+
+            <% if( auth ) { %>
+            <form action="/logout" method="POST" class="form-inline my-2 my-lg-0">
+                <button class="btn btn-outline-danger float-right my-2 my-sm-0">Logout</button>
+            </form>
+            <% } %>
+    </div>
+</nav>
+
+<div class="container mt-5">
+
+    <% if(quizeQues.length > 1) { %> 
+    <% quizeQues.forEach(function(pro) { %>
+   
+        <strong style="color: #1abc9c;">Question: </strong>
+    <div class="row">
+        <div class="col-md-12 shadow ml-3 p-3 mb-3 rounded">
+            <div class="row">
+                <div class="col-12">
+                    <h4><%= pro.title %> ?</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p style="color: #c1c1c1;"><%= pro.des %></p>
+                </div>
+            </div>
+            <strong>Options: </strong>
+            <% for(var i=0;i<pro.option.length;i++) { %>
+            <ul class="list-group mt-2">
+                <li class="list-group-item">
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="radio" id="<%= pro.option[i]._id %>" value="<%= i+1 %>" name="<%= pro._id %>" class="custom-control-input">
+                        <label class="custom-control-label" for="<%= pro.option[i]._id %>"><%= pro.option[i].title %></label>
+                    </div>
+                </li>
+            </ul>
+            <% } %>
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn-success float-right mt-1 btn" id="btn<%= pro._id %>" onclick="save('<%= pro._id %>','<%= pro.answer %>','<%= pro.code %>',event)">save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="text" value="<%= pro.code %>" id="findCode" hidden>
+    <% }) %>
+   
+    <% } %> 
+
+    <% if(quizeQues.length == 1) { %> 
+    <% quizeQues.forEach(function(pro) { %>
+        <strong style="color: #1abc9c;">Question: </strong>
+    <div class="row">
+        <div class="col-md-12 shadow ml-3 p-3 mb-3 rounded">
+            <div class="row">
+                <div class="col-12">
+                    <h4><%= pro.title %> ?</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p style="color: #c1c1c1;"><%= pro.des %></p>
+                </div>
+            </div>
+            <strong>Options: </strong>
+            <% for(var i=0;i<pro.option.length;i++) { %>
+            <ul class="list-group mt-2">
+                <li class="list-group-item">
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="radio" id="<%= pro.option[i]._id %>" value="<%= i+1 %>" name="<%= pro._id %>" class="custom-control-input">
+                        <label class="custom-control-label" for="<%= pro.option[i]._id %>"><%= pro.option[i].title %></label>
+                    </div>
+                </li>
+            </ul>
+            <% } %>
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn-success float-right mt-1 btn" id="btn<%= pro._id %>" onclick="save('<%= pro._id %>','<%= pro.answer %>','<%= pro.code %>',event)">save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="text" value="<%= pro.code %>" id="findCode" hidden>
+    <% }) %>
+    <% } %> 
+    <div class="row">
+            <div class="col-12 mt-5 mb-3">
+                <center>
+                    <button class="btn btn-primary btn-lg" onclick="submitQuize(event)">Submit Quize</button>
+                </center>
+            </div>
+        </div>
+</div>
+
+<script>
+
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+window.onhashchange=function(){window.location.hash="no-back-button";}
+
+
+function save(id,answer,code,event){
+    event.preventDefault()
+    // alert(answer)
+    // alert( $("input[name='"+id+"']:checked").val())
+
+    $(document).ready(function(){
+
+        $.ajax({
+            method: 'POST',
+            url:'/api/quize/save/'+id,
+            data:{
+                correct:answer,
+                answer:$("input[name='"+id+"']:checked").val(),
+                code:code
+            },
+            success: function(responce){
+                if(responce.success == true){
+                    $('#btn'+id).html('saved')
+                }
+            }
+        })
+
+    })
+}
+
+function submitQuize(event){
+    event.preventDefault()
+    var code = document.getElementById('findCode').value
+    location.href = '/api/quize/result/53132198sroigdnDklfdFRID/'+code+'/65321321645earfasdaasdcr55'
+}
+
+</script>

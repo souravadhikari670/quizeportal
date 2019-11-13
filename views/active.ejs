@@ -1,0 +1,86 @@
+<%- include('bootstrap') %>
+<div class="container p-4 mt-5 rounded shadow-lg w-50">
+    <div class="row">
+        <div class="col-12 mb-4 d-flex justify-content-center">
+            <h3 class="mb-4">Credentials</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form id="form">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id"><strong>University Id</strong></label>
+                        <input type="text" id="id" name="id" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for=""><strong>Code</strong></label>
+                        <input type="text" id="code" name="code" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <center>
+                            <button class="btn btn-dark" onclick="submitForm(event)">Take Quize</button>
+                        </center>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+   function submitForm(event){
+       event.preventDefault()
+
+       if( $('#id').val() != '' ){
+        if( $('#code').val() != '' ){
+
+            $(document).ready(function(){
+
+                $.ajax({
+
+                    method: 'POST',
+                    url: '/api/quize/takequize',
+                    data:{
+                        id: $('#id').val(),
+                        code: $('#code').val()
+                    },success: function(responce){
+
+                        if( responce.id === 'error' ){
+
+                            Swal.fire({
+                                type: 'warning',
+                                text: 'Id not correct',
+                            }) 
+
+                        }
+                        if( responce.success === true ){
+
+                           location.href = 'http://127.0.0.1/api/quize/takequize/53132198sroigdnDklfdFRID/'+responce.code+'/65321321645earfasdaasdcr55'
+
+                        }
+
+                    }
+                })
+
+            })
+
+        }else{
+            Swal.fire({
+                type: 'warning',
+                text: 'Type quize code',
+            })
+        }
+       }else{
+            Swal.fire({
+                type: 'warning',
+                text: 'Type your university id',
+            })
+       }
+   }
+
+</script>

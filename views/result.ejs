@@ -1,0 +1,22 @@
+<%- include('bootstrap') %>
+<div class="container p-4 mt-5 rounded shadow-lg w-50">
+    <div class="row">
+        <div class="col-12 mb-4 d-flex justify-content-center">
+            <h4 class="display-4 mb-4">Total Score</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+           <center> <h4 class="display-4">
+               <%= array.length %></h4>
+            </center>
+        </div>
+    </div>
+</div>
+
+<script>
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+window.onhashchange=function(){window.location.hash="no-back-button";}
+
+</script>

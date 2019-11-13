@@ -1,0 +1,175 @@
+<%- include('bootstrap') %>
+<!-- Image and text -->
+<style>
+#link{
+    font-size: 16px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+</style>
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
+        view questions
+    </a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a href="/api/admin/addquestion" class="nav-link">
+                Add question
+            </a>
+        </li>
+        </ul>
+            <form action="/logout" method="POST" class="form-inline my-2 my-lg-0">
+                <button class="btn btn-outline-danger my-2 my-sm-0">Logout</button>
+            </form>
+</nav>
+
+<div class="container mt-5">
+    <div class="row">
+            <% question.forEach(function(pro) { %>
+        <div class="col-md-5 shadow-lg ml-3 p-3 mb-3 rounded">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4><%= pro.title %> ?</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                                <p><%= pro.des %></p>
+                        </div>
+                    </div>
+                    <strong>Options: </strong>
+                    <% pro.option.forEach(function(opt) { %> 
+                        <div class="custom-control custom-radio mb-2">
+                                <input type="radio" id="<%= opt._id %>" name="<%= pro._id %>" class="custom-control-input">
+                                <label class="custom-control-label" for="<%= opt._id %>"><%= opt.title %></label>
+                        </div>
+                     <% }) %>   
+                     <strong>Answer : <%= pro.answer %></strong>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-danger mt-4" onclick="deleteProduct('<%= pro._id %>', 'event')">
+                                Delete</button>
+                        </div>
+                        <div class="col-6">
+                            <div class="custom-control mt-4 custom-checkbox">
+                                <input type="checkbox" class="custom-control-input createquize" value="<%= pro._id %>" id="<%= pro._id %>">
+                                <label class="custom-control-label" for="<%= pro._id %>">creare quize</label>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-5 mb-3">
+                <center>
+                    <button class="btn btn-primary btn-lg" onclick="createQuize(event)">Create Quize</button>
+                </center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 shadow-lg p-3 mb-5">
+                <strong>Quize Link:</strong>
+                <input type="text" class="form-control" id="linkCode" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal
+<div class="modal fade" tabindex="-1" id="editModal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="productname"><strong>Product Name</strong></label>
+                            <input type="text" id="productname" name="productname" class="form-control">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="productdes"><strong>Product Description</strong></label>
+                            <textarea type="text" id="productdes" name="productdes" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="productprice"><strong>Product Price </strong></label>
+                            <input type="number" name="productprice" id="productprice" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="productavailable"><strong>Product Available</strong></label>
+                            <input type="number" id="productavailable" name="productavailable" class="form-control">
+                        </div>
+                        <input type="text" id="productid" hidden>
+                        <div class="col-md-12 mb-3">
+                            <center>
+                                <button class="btn btn-primary" id="btnaddproduct" onclick="saveProduct(event)">Add
+                                    Product</button>
+                            </center>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> -->
+<script>
+    function deleteProduct(pid, event) {
+
+        $(document).ready(function () {
+            $.ajax({
+                method: "POST",
+                url: '/api/admin/deletequestion/' + pid,
+                success: function (responce) {
+                    if (responce.success === true) {
+                        location.reload()
+                    }
+                }
+            })
+        })
+    }
+
+    function createQuize(event){
+        event.preventDefault()
+
+        var questionArray = []
+        var q = document.getElementsByClassName('createquize')
+        
+        $(document).ready(function(){
+                for( i=0;i<q.length;i++ ){
+                if($(q[i]).prop("checked") == true)
+                    questionArray.push( q[i].value)
+            }
+
+            if( questionArray.length != 0 ){
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/api/admin/createquize',
+                    data:{
+                        questionArray
+                    },
+                    success: function(responce){
+                        $('#linkCode').val('http://127.0.0.1/api/quize/takequize/53132198sroigdnDklfdFRID/'+responce.code+'/65321321645earfasdaasdcr55')
+                    }
+                })
+
+            }else{
+                Swal.fire({
+                    type: 'warning',
+                    text: 'choose minimum one question',
+                })
+            }
+        
+        })
+    }
+</script>

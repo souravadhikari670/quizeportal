@@ -1,0 +1,163 @@
+<%- include('bootstrap') %>
+
+<div class="container p-4 mt-5 rounded shadow-lg w-50">
+    <div class="row">
+        <div class="col-12 mb-4 d-flex justify-content-center">
+            <h3 class="mb-4">Register</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form id="form">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="fullname"><strong>Full Name</strong></label>
+                        <input type="text" id="fullname" name="fullname" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="id"><strong>University Id</strong></label>
+                        <input type="text" id="id" name="id" class="form-control">
+                    </div>   
+                </div>
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label for="email"><strong>Email </strong></label>
+                        <input type="email" name="email" id="email" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="password"><strong>Password</strong></label>
+                        <input type="password" id="password" name="password" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="repassword"><strong>Confirm Password </strong></label>
+                        <input type="password" name="repassword" id="repassword" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-4 mt-2">
+                        <button class=" btn btn-primary" onclick="formSubmit(event)">Register</button>
+                    </div>
+                    <div class="col-6 mb-4 mt-2">
+                        <a href="/api/auth/login" style="text-decoration:none">
+                            <h5 id="alreadyAccount">Already have an account?</h5>
+                        <a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function formSubmit(event){
+        event.preventDefault()
+        var fullname = document.getElementById('fullname').value
+        var email = document.getElementById('email').value
+        var id = document.getElementById('id').value
+        var password = document.getElementById('password').value
+        var repassword = document.getElementById('repassword').value
+        var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+
+        if( fullname != "" && isNaN(fullname)){
+                if(email != ""){
+                    if(email.match(mailformat)){
+                           if(id != ""){
+                            if(password != ""){
+                               if(password === repassword){
+                                    sendDetail(fullname,id,email,password)
+                                }else{
+                                    Swal.fire({
+                                    type: 'warning',
+                           
+                                    text: 'Password doesnot match yet',
+                                })
+                                    }
+                                }else{
+                                    Swal.fire({
+                                        type: 'warning',
+                      
+                                        text: 'Type your password',
+                                    })
+                                }
+                           }else{
+                            Swal.fire({
+                                type: 'warning',
+                
+                                text: 'Type your university id',
+                            })
+                           }
+                    }else{
+                        Swal.fire({
+                        type: 'warning',
+            
+                        text: 'Type a valid email',
+                    })
+                    }
+                }else{
+                    Swal.fire({
+                type: 'warning',
+           
+                text: 'Type your email',
+            })
+                }
+        }else{
+            Swal.fire({
+                type: 'warning',
+                title: 'Oops...',
+                text: 'Please type your fullname not any number accepted',
+            })
+        }
+    }
+    function sendDetail(fullname,id,email,password){
+        $.ajax({
+            method: 'POST',
+            url: '/api/auth/register',
+            data:{
+                name:fullname,
+                id: id,
+                email:email,
+                password:password
+            },
+            success: function(response){
+                if( response.success == true){
+                    congrat()
+                }
+                if(response.email == 'exist'){
+                    Swal.fire({
+                    type: 'warning',
+                    text: 'User already exists with this email',
+                })
+                }
+        }
+        })
+    }
+    function congrat(){
+        let timerInterval
+            Swal.fire({
+                type: 'success',
+                title: 'Congratulations!',
+                html: 'Welcome to Shopping portal',
+                timer: 100,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                    Swal.getContent().querySelector('strong')
+                        .textContent = Swal.getTimerLeft()
+                    }, 100)
+                },
+                onClose: () => { 
+                clearInterval(timerInterval)
+                location.href = "/" 
+            }
+            }).then((result) => {
+            if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.timer
+            ) {
+                console.log('I was closed by the timer')
+            }
+            }) 
+    }
+</script>
