@@ -215,7 +215,7 @@ router.post('/takequize',
             if(!admin){
                 const newAnswer = new Admin({
                     code: req.params.code,
-                    uid: req.user.id,
+                    uid: req.user.uid,
                     score: array.length
                 })
         
@@ -224,7 +224,7 @@ router.post('/takequize',
                 if(admin.result.map(item => item.code).indexOf(req.params.code)){
                 const newAnswer = {
                     code: req.params.code,
-                    uid: req.user.id,
+                    uid: req.user.uid,
                     score: array.length
                 }
                 admin.result.push(newAnswer)

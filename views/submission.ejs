@@ -1,0 +1,33 @@
+<%- include('bootstrap') %>
+<!-- Image and text -->
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+      <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
+      Submission
+    </a>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <form action="/logout" method="POST">
+                <button class="btn btn-sm btn-danger">Logout</button>
+            </form>
+        </li>
+    </ul>
+</nav>
+<table class="table">
+    <thead class="thead mt-5">
+      <tr class="text-center">
+        <th scope="col">Question Code</th>
+        <th scope="col">user id</th>
+        <th scope="col">marks</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% result.forEach(function(ans) { %>
+      <tr class="text-center">
+        <td><%= ans.code %></td>
+        <td><%= ans.uid %></td>
+        <td><%= ans.score %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>

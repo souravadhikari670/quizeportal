@@ -18,6 +18,7 @@ const randomstring = require('randomstring')
 //schema
 const Question = require('../../modal/question')
 const Profile = require('../../modal/profile')
+const Admin = require('../../modal/admin')
 
 //add product panel
 router.get('/addquestion',(req,res)=>{
@@ -102,6 +103,23 @@ router.post('/createquize', (req, res)=>{
         })
     }
     res.send({code: quizeCode})
+})
+
+router.get('/viewsubmission', (req,res)=>{
+    Admin.findOne({email:"admin@gmail.com"})
+    .then((admin)=>{
+        if( admin ){
+            const result = admin.result
+            
+            res.render('submission',{result})
+
+        }else{
+            res.json("no submission yet")
+        }
+    })
+    .catch((error)=>{
+        console.log(error)
+    })
 })
 
 module.exports = router

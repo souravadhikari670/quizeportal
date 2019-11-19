@@ -20,8 +20,7 @@ const ProfileSchema = new Schema({
             type: String
         },
         uid:{
-            type: Schema.Types.ObjectId,
-            ref:'Profile'
+            type: String
         },
         score:{
             type: String
