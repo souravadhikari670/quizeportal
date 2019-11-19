@@ -67,41 +67,69 @@ router.post('/takequize',
               console.log(error)
           })
         }
-        else if(!admin.result.map(item => item.uid).indexOf(req.user.id))
+        else if(admin)
         {
-            if(!admin.result.map(item => item.code).indexOf(req.params.code)){
-                res.json('Your answers are already submitted')
-            }else{
-                Question.find()
-                .then((q)=>{
-                for(i=0;i<q.length;i++){
-        
-                    if( q[i].code == req.params.code ){
-                     
-                        quizeQues.push(q[i])
+            Answer.findOne({code:req.params.code})
+            .then((ans)=>{
+                if( ans ){
+
+                    if( ans.uid == req.user.id ){
+                        res.json('Your answers are already submitted')
+                    }else{
+                        Question.find()
+                        .then((q)=>{
+                        for(i=0;i<q.length;i++){
+                
+                            if( q[i].code == req.params.code ){
+                                
+                                quizeQues.push(q[i])
+                            }
+                        }
+                        res.render('home',{quizeQues, auth:true})
+                        })
+                        .catch((error)=>{
+                            console.log(error)
+                        })
                     }
+
+                }else{
+                    Question.find()
+                    .then((q)=>{
+                    for(i=0;i<q.length;i++){
+            
+                        if( q[i].code == req.params.code ){
+                            
+                            quizeQues.push(q[i])
+                        }
+                    }
+                    res.render('home',{quizeQues, auth:true})
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                    })
                 }
-                res.render('home',{quizeQues, auth:true})
             })
             .catch((error)=>{
                 console.log(error)
             })
-        }
-    }else{
-        Question.find()
-        .then((q)=>{
-        for(i=0;i<q.length;i++){
-
-            if( q[i].code == req.params.code ){
-             
-                quizeQues.push(q[i])
-            }
-        }
-        res.render('home',{quizeQues, auth:true})
-    })
-    .catch((error)=>{
-        console.log(error)
-    })
+        //     if(admin.result.map(item => item.code).indexOf(req.params.code)){
+        //         res.json('Your answers are already submitted')
+        //     }else{
+        //         Question.find()
+        //         .then((q)=>{
+        //         for(i=0;i<q.length;i++){
+        
+        //             if( q[i].code == req.params.code ){
+                     
+        //                 quizeQues.push(q[i])
+        //             }
+        //         }
+        //         res.render('home',{quizeQues, auth:true})
+        //     })
+        //     .catch((error)=>{
+        //         console.log(error)
+        //     })
+        // }
     }
     })
     .catch((error)=>{
@@ -182,7 +210,6 @@ router.post('/takequize',
                 }
             }
         }
-
         Admin.findOne({email:'admin@gmail.com'})
         .then((admin)=>{
             if(!admin){
