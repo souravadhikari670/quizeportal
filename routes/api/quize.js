@@ -46,10 +46,22 @@ router.post('/takequize',
                 code: req.params.code,
                 uid: req.user.id,
             })
-    
           newAnswer.save()
           .then(()=>{
-            res.render('home',{quizeQues, auth:true})
+                Question.find()
+                .then((q)=>{
+                for(i=0;i<q.length;i++){
+        
+                    if( q[i].code == req.params.code ){
+                    
+                        quizeQues.push(q[i])
+                    }
+                }
+                res.render('home',{quizeQues, auth:true})
+            })
+            .catch((error)=>{
+                console.log(error)
+                })
           })
           .catch((error)=>{
               console.log(error)
@@ -163,7 +175,7 @@ router.post('/takequize',
         var array = []
 
         for( i=0;i<ans.length;i++ ){
-            if( ans[i].uid == req.user.id ){
+            if( ans[i].code == req.params.code ){
                 if( ans[i].correct == ans[i].answer ){
 
                     array.push(ans[i])
