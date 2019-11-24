@@ -6,6 +6,7 @@ const mySecretkey = require('../../key/database').secret
 
 //bring required Schema
 const Profile = require('../../modal/profile')
+const Admin = require('../../modal/admin')
 
 //Register Route
 router.get('/register', (req, res)=>{
@@ -65,9 +66,53 @@ router.post('/register',(req, res)=>{
 router.post('/login',(req, res)=>{
    if(req.body.email === "admin@gmail.com"){
        if(req.body.password === "admin"){
-                
-        res.send({success: true, admin:"admin"})
-        
+           Admin.findOne({email:"admin@gmail.com"})
+           .then((admin)=>{
+            if( admin ){
+                const data = {
+                    id: admin._id,
+                    email: admin.email,
+                }
+                jsonwt.sign(
+                    data,
+                    mySecretkey,
+                    {expiresIn: 86400},
+                    (error, token)=>{
+                        res.cookie('token', token)
+                        res.send({success: true, admin:"admin"})
+                    }
+                )
+            }else{
+                const newAnswer = new Admin({
+                    email:"admin@gmail.com",
+                    password:"admin",
+                    name:"admin"
+                })
+              newAnswer.save()
+              .then((admin)=>{
+                const data = {
+                    id:admin._id,
+                    email: admin.email,
+                }
+                jsonwt.sign(
+                    data,
+                    mySecretkey,
+                    {expiresIn: 86400},
+                    (error, token)=>{
+                        res.cookie('token', token)
+                        res.send({success: true, admin:"admin"})
+                    }
+                )
+              })
+              .catch((error)=>{
+                  console.log(error)
+              })
+            }
+           })
+           .catch((error)=>{
+               console.log(error)
+           })
+       
        }else{
         res.send({password: "notcorrect"})
        }

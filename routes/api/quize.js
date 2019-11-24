@@ -40,158 +40,55 @@ router.post('/takequize',
     var quizeQues = []
     Admin.findOne({email:'admin@gmail.com'})
     .then((admin)=>{
-
-        if(!admin){
-            const newAnswer = new Admin({
-                code: req.params.code,
-                uid: req.user.id,
-            })
-          newAnswer.save()
-          .then(()=>{
+        if(admin)
+        {
+            if(admin.result.filter(result => result.code === req.params.code && result.uid === req.user.uid ).length > 0)
+            {
+                res.json('Your answers are already submitted')
+            }else{
                 Question.find()
                 .then((q)=>{
                 for(i=0;i<q.length;i++){
         
                     if( q[i].code == req.params.code ){
-                    
+                        
                         quizeQues.push(q[i])
                     }
                 }
                 res.render('home',{quizeQues, auth:true})
-            })
-            .catch((error)=>{
-                console.log(error)
                 })
-          })
-          .catch((error)=>{
-              console.log(error)
-          })
-        }
-        else if(admin)
-        {
-            Answer.findOne({code:req.params.code})
-            .then((ans)=>{
-                if( ans ){
-
-                    if( ans.uid == req.user.id ){
-                        res.json('Your answers are already submitted')
-                    }else{
-                        Question.find()
-                        .then((q)=>{
-                        for(i=0;i<q.length;i++){
-                
-                            if( q[i].code == req.params.code ){
-                                
-                                quizeQues.push(q[i])
-                            }
-                        }
-                        res.render('home',{quizeQues, auth:true})
-                        })
-                        .catch((error)=>{
-                            console.log(error)
-                        })
-                    }
-
-                }else{
-                    Question.find()
-                    .then((q)=>{
-                    for(i=0;i<q.length;i++){
+                .catch((error)=>{
+                    console.log(error)
+                })
+            }
             
-                        if( q[i].code == req.params.code ){
-                            
-                            quizeQues.push(q[i])
-                        }
-                    }
-                    res.render('home',{quizeQues, auth:true})
-                    })
-                    .catch((error)=>{
-                        console.log(error)
-                    })
-                }
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
-        //     if(admin.result.map(item => item.code).indexOf(req.params.code)){
-        //         res.json('Your answers are already submitted')
-        //     }else{
-        //         Question.find()
-        //         .then((q)=>{
-        //         for(i=0;i<q.length;i++){
-        
-        //             if( q[i].code == req.params.code ){
-                     
-        //                 quizeQues.push(q[i])
-        //             }
-        //         }
-        //         res.render('home',{quizeQues, auth:true})
-        //     })
-        //     .catch((error)=>{
-        //         console.log(error)
-        //     })
-        // }
-    }
-    })
+        }
+    })  
     .catch((error)=>{
         console.log(error)
     })
  })
 
 
- router.post('/save/:id',passport.authenticate('jwt',{session:false,failureRedirect:'/api/auth/login'}),(req, res)=>{
+ router.post('/save/:id',passport.authenticate('jwt',{session:false,failureRedirect:'/api/auth/login'}),async(req, res)=>{
 
-    Answer.findOne({qid:req.params.id})
-    .then((ans)=>{
-        if(ans){
-            if( ans.code === req.body.code ){
-                console.log('abc')
-                Answer.findOneAndUpdate({qid:req.params.id},{$set:{answer:Number(req.body.answer)}},{new:true})
-                .then(()=>{
-                    res.send({success:true})
-                })
-                .catch((error)=>{
-                    console.log(error)
-                })
-            }else{
-            const newAnswer = new Answer({
-                qid: req.params.id,
-                uid: req.user.id,
-                correct: Number(req.body.correct),
-                answer: Number(req.body.answer),
-                code:req.body.code
-            })
-            newAnswer.save()
-            .then(()=>{
-                res.send({success:true})
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
-        }
-
-        }else{
-
-            const newAnswer = new Answer({
-                qid: req.params.id,
-                uid: req.user.id,
-                correct: Number(req.body.correct),
-                answer: Number(req.body.answer),
-                code:req.body.code
-            })
-            newAnswer.save()
-            .then(()=>{
-                res.send({success:true})
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
-        }
-
+   
+    const newAnswer = new Answer({
+        qid: req.params.id,
+        uid: req.user.id,
+        correct: Number(req.body.correct),
+        answer: Number(req.body.answer),
+        code:req.body.code
     })
-    .catch((error)=>{
-        console.log(error)
-    })
-
+        newAnswer.save()
+        .then(()=>{
+            res.send({success:true})
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    
+        
  })
 
  router.get('/result/53132198sroigdnDklfdFRID/:code/65321321645earfasdaasdcr55',
@@ -203,7 +100,7 @@ router.post('/takequize',
         var array = []
 
         for( i=0;i<ans.length;i++ ){
-            if( ans[i].code == req.params.code ){
+            if( ans[i].code === req.params.code && ans[i].uid.toString() === req.user.id.toString() ){
                 if( ans[i].correct == ans[i].answer ){
 
                     array.push(ans[i])
@@ -212,16 +109,11 @@ router.post('/takequize',
         }
         Admin.findOne({email:'admin@gmail.com'})
         .then((admin)=>{
-            if(!admin){
-                const newAnswer = new Admin({
-                    code: req.params.code,
-                    uid: req.user.uid,
-                    score: array.length
-                })
-        
-              newAnswer.save()
-            }else if(admin){
-                if(admin.result.map(item => item.code).indexOf(req.params.code)){
+
+            if(admin){
+                if(admin.result.filter(result => result.code === req.params.code && result.uid === req.user.uid ).length > 0){
+                    res.render('result',{array})
+            }else{
                 const newAnswer = {
                     code: req.params.code,
                     uid: req.user.uid,
@@ -235,8 +127,6 @@ router.post('/takequize',
                 .catch((error)=>{
                     console.log(error)
                 })
-            }else{
-                res.render('result',{array})
             }
             }
         })

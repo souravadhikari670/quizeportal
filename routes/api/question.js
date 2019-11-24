@@ -21,11 +21,11 @@ const Profile = require('../../modal/profile')
 const Admin = require('../../modal/admin')
 
 //add product panel
-router.get('/addquestion',(req,res)=>{
-    res.render('addquestion')
+router.get('/addquestion',passport.authenticate('jwt',{session:false, failureRedirect:'/sessionexpire'}),(req,res)=>{
+    res.render('addquestion',{auth:true})
 })
 
-router.post('/addquestion',(req, res)=>{
+router.post('/addquestion',passport.authenticate('jwt',{session:false, failureRedirect:'/sessionexpire'}),(req, res)=>{
 
     const newQuestion = new Question({
         title:req.body.title,
@@ -62,7 +62,7 @@ router.post('/addquestion',(req, res)=>{
     
 })
 
-router.get('/viewquestion',(req, res)=>{
+router.get('/viewquestion',passport.authenticate('jwt',{session:false, failureRedirect:'/sessionexpire'}),(req, res)=>{
 
     Question.find()
     .then((question)=>{
@@ -75,7 +75,7 @@ router.get('/viewquestion',(req, res)=>{
 
 })
 
-router.post('/deletequestion/:pid',(req, res)=>{
+router.post('/deletequestion/:pid',passport.authenticate('jwt',{session:false, failureRedirect:'/sessionexpire'}),(req, res)=>{
 
     Question.findByIdAndRemove(req.params.pid)
     .then((ques)=>{
@@ -87,7 +87,7 @@ router.post('/deletequestion/:pid',(req, res)=>{
 })
 
 //create quizee
-router.post('/createquize', (req, res)=>{
+router.post('/createquize',passport.authenticate('jwt',{session:false, failureRedirect:'/sessionexpire'}), (req, res)=>{
 
     var questionArray = req.body.questionArray
     const rand = randomstring.generate(8)
@@ -105,7 +105,7 @@ router.post('/createquize', (req, res)=>{
     res.send({code: quizeCode})
 })
 
-router.get('/viewsubmission', (req,res)=>{
+router.get('/viewsubmission',passport.authenticate('jwt',{session:false, failureRedirect:'/sessionexpire'}), (req,res)=>{
     Admin.findOne({email:"admin@gmail.com"})
     .then((admin)=>{
         if( admin ){

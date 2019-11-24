@@ -6,11 +6,13 @@
       Add Question
     </a>
     <ul class="navbar-nav mr-auto">
+        <% if(auth) { %>
         <li class="nav-item active">
             <form action="/logout" method="POST">
                 <button class="btn btn-sm btn-danger">Logout</button>
             </form>
         </li>
+        <% } %>
     </ul>
 </nav>
 

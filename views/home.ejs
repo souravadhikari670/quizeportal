@@ -122,9 +122,9 @@ function save(id,answer,code,event){
     event.preventDefault()
     // alert(answer)
     // alert( $("input[name='"+id+"']:checked").val())
-
+    
     $(document).ready(function(){
-
+        if( $("input[name='"+id+"']:checked").val() != undefined ){
         $.ajax({
             method: 'POST',
             url:'/api/quize/save/'+id,
@@ -136,11 +136,19 @@ function save(id,answer,code,event){
             success: function(responce){
                 if(responce.success == true){
                     $('#btn'+id).html('saved')
+                    $('#btn'+id).attr('disabled','disabled')
                 }
             }
         })
-
+    }
+    else{
+        Swal.fire({
+            type: 'warning',
+            text: 'choose your answer',
+        })
+    }
     })
+    
 }
 
 function submitQuize(event){

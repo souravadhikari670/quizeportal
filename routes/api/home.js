@@ -21,7 +21,7 @@ passport.authenticate('jwt',{session: false,failureRedirect: "/sessionexpire"}),
 
 router.get('/sessionexpire',(req, res)=>{
     res.clearCookie('token')
-    res.redirect('/shoppingportal/home')
+    res.redirect('/api/auth/login')
 })
 router.post('/logout',(req, res)=>{
     res.clearCookie('token')
