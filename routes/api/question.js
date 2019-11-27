@@ -2,18 +2,19 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const multer = require('multer')
+const fs = require('fs')
+const CsvReadableStream = require('csv-reader');
 const randomstring = require('randomstring')
-// // configuration multer
-// var storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, './routes/public/product')
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, Date.now() + file.originalname)
-//     }
-//   })
-   
-//   var upload = multer({ storage: storage })
+// configuration multer
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './routes/public/product/csvfile')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + file.originalname)
+    }
+  })
+  var upload = multer({ storage: storage })
 
 //schema
 const Question = require('../../modal/question')
@@ -60,6 +61,48 @@ router.post('/addquestion',passport.authenticate('jwt',{session:false, failureRe
         console.log(error)
     })
     
+})
+
+//upload csv file
+router.post('/uploadquestion',
+passport.authenticate('jwt',{session:false,failureRedirect:'/sessionexpire'}
+),upload.single('csvfilereader'),(req, res)=>{
+
+    var inputStream = fs.createReadStream('./routes/public/product/csvfile/'+ req.file.filename, 'utf8');
+    inputStream
+    .pipe(CsvReadableStream({ parseNumbers: true, parseBooleans: true, trim: true }))
+    .on('data', function (row) {
+        
+            const newQuestion = new Question({
+                title:row[0],
+                des:row[1],
+                answer:row[2]
+            })
+            newQuestion.save()
+            .then((ques)=>{
+                const option1 = {}
+                option1.title = row[3]
+                const option2 = {}
+                option2.title = row[4]
+                const option3 = {}
+                option3.title = row[5]
+                const option4 = {}
+                option4.title = row[6]
+
+                ques.option.push(option1)
+                ques.option.push(option2)
+                ques.option.push(option3)
+                ques.option.push(option4)
+                ques.save()
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+    })
+    .on('end', function (data) {
+        res.send({success: true})
+    });
+
 })
 
 router.get('/viewquestion',passport.authenticate('jwt',{session:false, failureRedirect:'/sessionexpire'}),(req, res)=>{

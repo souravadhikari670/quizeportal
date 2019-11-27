@@ -2,8 +2,8 @@
 <!-- Image and text -->
 <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">
-      <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
-      Add Question
+        <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
+        Add Question
     </a>
     <ul class="navbar-nav mr-auto">
         <% if(auth) { %>
@@ -18,108 +18,146 @@
 
 <div class="container-fluid shadow-lg">
     <div class="row">
-        <div class="col-md-8 p-2">
-            <form id="form_id">
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label for="title"><strong>Question title</strong></label>
-                        <input type="text" id="title" name="title" class="form-control">
-                    </div>
-                    <div class="col-md-12 mb-3">
-                        <label for="des"><strong>Question Description</strong></label>
-                        <textarea type="text" id="des" name="des" class="form-control"></textarea>
-                    </div>
+        <div class="col-md-8 p-2" style="height: 90vh; overflow: scroll;overflow-x: hidden;">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="setquestion-tab" data-toggle="tab" href="#setquestion" role="tab"
+                        aria-controls="setquestion" aria-selected="true">set question</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="fileupload-tab" data-toggle="tab" href="#fileupload" role="tab"
+                        aria-controls="fileupload" aria-selected="true">CSV fileupload</a>
+                </li>
+
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="setquestion" role="tabpanel"
+                    aria-labelledby="setquestion-tab">
+                    <form id="form_id">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="title"><strong>Question title</strong></label>
+                                <input type="text" id="title" name="title" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="des"><strong>Question Description</strong></label>
+                                <textarea type="text" id="des" name="des" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="firstOpt"><strong>First option </strong></label>
+                                <input type="text" name="firstOpt" id="firstOpt" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="secondOpt"><strong>Second option </strong></label>
+                                <input type="text" id="secondOpt" name="secondOpt" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="thirdOpt"><strong>Third option </strong></label>
+                                <input type="text" id="thirdOpt" name="thirdOpt" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="fourthOpt"><strong>Fourth option </strong></label>
+                                <input type="text" id="fourthOpt" name="fourthOpt" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Answer </strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="first" name="answer" value="1" class="custom-control-input">
+                                    <label class="custom-control-label" for="first">First</label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="second" name="answer" value="2"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="second">Second</label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="third" name="answer" value="3" class="custom-control-input">
+                                    <label class="custom-control-label" for="third">Third</label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="fourth" name="answer" value="4"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="fourth">Fourth</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mt-2 mb-3">
+                                <center>
+                                    <button class="btn btn-primary" id="btnaddproduct" onclick="addProduct(event)">Add
+                                        Question</button>
+                                </center>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label for="firstOpt"><strong>First option </strong></label>
-                        <input type="text" name="firstOpt" id="firstOpt" class="form-control">
+
+                <div class="tab-pane fade show" id="fileupload" role="tabpanel" aria-labelledby="fileupload-tab">
+
+                    <div class="row">
+                        <div class="col-12 mt-2">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="csvfilereader" id="csvfilereader"
+                                    required>
+                                <label class="custom-file-label" for="csvfilereader">Choose file...</label>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <center>
+                                <button class="btn btn-primary my-4"onclick="uploadcsvfile(event)">
+                                    Upload</button>
+                            </center>
+                        </div>
                     </div>
+
                 </div>
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label for="secondOpt"><strong>Second option </strong></label>
-                        <input type="text" id="secondOpt" name="secondOpt" class="form-control">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label for="thirdOpt"><strong>Third option </strong></label>
-                        <input type="text" id="thirdOpt" name="thirdOpt" class="form-control">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label for="fourthOpt"><strong>Fourth option </strong></label>
-                        <input type="text" id="fourthOpt" name="fourthOpt" class="form-control">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                            <strong>Answer </strong>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="first" name="answer" value="1" class="custom-control-input">
-                            <label class="custom-control-label" for="first">First</label>
-                          </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="second" name="answer" value="2" class="custom-control-input">
-                            <label class="custom-control-label" for="second">Second</label>
-                          </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="third" name="answer" value="3" class="custom-control-input">
-                            <label class="custom-control-label" for="third">Third</label>
-                          </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="custom-control custom-radio"> 
-                            <input type="radio" id="fourth" name="answer" value="4" class="custom-control-input">
-                            <label class="custom-control-label" for="fourth">Fourth</label>
-                          </div>
-                    </div>
-                </div>
-              
-                <div class="row">
-                    <div class="col-md-12 mt-2 mb-3">
-                       <center>
-                           <button class="btn btn-primary" id="btnaddproduct"
-                            onclick="addProduct(event)" >Add Product</button>
-                        </center>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
         <div class="col-md-4 mt-5 d-flex justify-content-center">
             <div class="card shadow-sm" style="width: 16rem;">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <h5 class="text-center mb-5">Admin Profile</h5>
-                            </div>
-                        </div>
-                        <h5 class="card-title">Name : admin</h5>
-                        <h6>admin@gmail.com</h6>
-                        <div class="row">
-                            <div class="col-6">
-                                    <a href="/api/admin/viewquestion">
-                                        <button class="btn btn-dark mt-4">view Question</button>
-                                    </a>
-                                  
-                            </div>
-                            <div class="col-6">
-                                    <a href="/api/admin/viewsubmission">
-                                        <button class="btn btn-dark mt-4">view submission</button>
-                                    </a>
-                            </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-center mb-5">Admin Profile</h5>
                         </div>
                     </div>
+                    <h5 class="card-title">Name : admin</h5>
+                    <h6>admin@gmail.com</h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="/api/admin/viewquestion">
+                                <button class="btn btn-dark mt-4">view Question</button>
+                            </a>
+
+                        </div>
+                        <div class="col-6">
+                            <a href="/api/admin/viewsubmission">
+                                <button class="btn btn-dark mt-4">view submission</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -128,111 +166,136 @@
 <script>
     //disabel back button
     window.location.hash = "no-back-button";
-        window.location.hash =
-            "Again-No-back-button"; //again because google chrome don't insert first hash into history
-        window.onhashchange = function () {
-            window.location.hash = "no-back-button";
-        }
-       
-        // $(document).ready(function(){
-        //     $("input[type='radio']"). click(function(){
-        // alert($("input[name='answer']:checked"). val());
-        // })
-        // })
+    window.location.hash =
+        "Again-No-back-button"; //again because google chrome don't insert first hash into history
+    window.onhashchange = function () {
+        window.location.hash = "no-back-button";
+    }
 
-    function addProduct(event){
+    // $(document).ready(function(){
+    //     $("input[type='radio']"). click(function(){
+    // alert($("input[name='answer']:checked"). val());
+    // })
+    // })
+
+    function addProduct(event) {
         event.preventDefault()
-        
-        $(document).ready(function(){
-            if($("#title").val() != '' ){
-                    if($("#des").val() != '' ){
-                        if($("#firstOpt").val() != '' ){
-                            if($("#secondOpt").val() != '' ){
-                            if($("#thirdOpt").val() != '' ){
-                            if($("#fourthOpt").val() != '' ){
-                                if($("input[name='answer']:checked").val() != undefined){
 
-                                var title = $('#title').val()
-                                var des = $('#des').val()
-                                var first = $('#firstOpt').val()
-                                var second = $('#secondOpt').val()
-                                var third = $('#thirdOpt').val()
-                                var fourth = $('#fourthOpt').val()
-                                var answer = $("input[name='answer']:checked").val()
-                                
-                                $.ajax({
-                                   
-                                    method: "POST",
-                                    url: "/api/admin/addquestion",
-                                    data: {
-                                        title:title,
-                                        des:des,
-                                        first:first,
-                                        second:second,
-                                        third: third,
-                                        fourth: fourth,
-                                        answer: answer
-                                    },
-                                    success: function(responce){
-                                        if( responce.success === true ){
-                                            Swal.fire({
-                                            type: 'success',
-                                            text: 'Successfully added',
+        $(document).ready(function () {
+            if ($("#title").val() != '') {
+                if ($("#des").val() != '') {
+                    if ($("#firstOpt").val() != '') {
+                        if ($("#secondOpt").val() != '') {
+                            if ($("#thirdOpt").val() != '') {
+                                if ($("#fourthOpt").val() != '') {
+                                    if ($("input[name='answer']:checked").val() != undefined) {
+
+                                        var title = $('#title').val()
+                                        var des = $('#des').val()
+                                        var first = $('#firstOpt').val()
+                                        var second = $('#secondOpt').val()
+                                        var third = $('#thirdOpt').val()
+                                        var fourth = $('#fourthOpt').val()
+                                        var answer = $("input[name='answer']:checked").val()
+
+                                        $.ajax({
+
+                                            method: "POST",
+                                            url: "/api/admin/addquestion",
+                                            data: {
+                                                title: title,
+                                                des: des,
+                                                first: first,
+                                                second: second,
+                                                third: third,
+                                                fourth: fourth,
+                                                answer: answer
+                                            },
+                                            success: function (responce) {
+                                                if (responce.success === true) {
+                                                    Swal.fire({
+                                                        type: 'success',
+                                                        text: 'Successfully added',
+                                                    })
+                                                    $('#title').val('')
+                                                    $('#des').val('')
+                                                    $('#firstOpt').val('')
+                                                    $('#secondOpt').val('')
+                                                    $('#thirdOpt').val('')
+                                                    $('#fourthOpt').val('')
+                                                    $("input[name='answer']:checked").val() =
+                                                        undefined
+                                                }
+                                            }
                                         })
-                                            $('#title').val('')
-                                           $('#des').val('')
-                                            $('#firstOpt').val('')
-                                           $('#secondOpt').val('')
-                                           $('#thirdOpt').val('')
-                                            $('#fourthOpt').val('')
-                                           $("input[name='answer']:checked").val() = undefined
-                                        }
+                                    } else {
+                                        Swal.fire({
+                                            type: 'warning',
+                                            text: 'Type choose answer',
+                                        })
                                     }
-                                })
-                                }else{
-                                Swal.fire({
-                                    type: 'warning',
-                                    text: 'Type choose answer',
-                                })
-                            }
-                            }else{
-                                Swal.fire({
-                                    type: 'warning',
-                                    text: 'Type fourth option',
-                                })
-                            }
+                                } else {
+                                    Swal.fire({
+                                        type: 'warning',
+                                        text: 'Type fourth option',
+                                    })
                                 }
-                                else{
+                            } else {
                                 Swal.fire({
                                     type: 'warning',
                                     text: 'Type third option',
                                 })
                             }
-                            }else{
-                                Swal.fire({
-                                    type: 'warning',
-                                    text: 'Type second option',
-                                })
-                            }
-                        }else{
+                        } else {
                             Swal.fire({
                                 type: 'warning',
-                                text: 'Type first option',
+                                text: 'Type second option',
                             })
                         }
-                    }else{
+                    } else {
                         Swal.fire({
                             type: 'warning',
-                            text: 'Type description',
+                            text: 'Type first option',
                         })
                     }
-            }else{
-                Swal.fire({
+                } else {
+                    Swal.fire({
                         type: 'warning',
-                        text: 'Type title',
+                        text: 'Type description',
                     })
+                }
+            } else {
+                Swal.fire({
+                    type: 'warning',
+                    text: 'Type title',
+                })
             }
         })
     }
+
+function uploadcsvfile(event){
+    event.preventDefault()
+    $(document).ready(function(){
+        var $data = new FormData()
+        var file = $("#csvfilereader").get(0).files[0]
+        $data.append('csvfilereader', file)
+        $.ajax({
+            method:"POST",
+            url:"/api/admin/uploadquestion",
+            data: $data,
+            contentType: false,
+            processData: false,
+            catch: false,
+            success: function(responce){
+                if( responce.success === true ){
+                    Swal.fire({
+                        type: 'success',
+                        text: 'Successfully added',
+                    })
+                }
+            }
+        })
+    })  
+}
 
 </script>
